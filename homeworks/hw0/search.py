@@ -128,33 +128,35 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    # def bfs():
-    #     for _ in range(len(queue)):python pacman.py -l mediumMaze -p SearchAgent
-
-    #         curr_state = queue.pop()
-    #         if problem.isGoalState(curr_state[0]):
-    #             actions.insert(0, curr_state[1])
-    #             return True
-        
-    #         children = problem.getSuccessors(curr_state[0])
+    def bfs():
+        while queue:
+            for _ in range(len(queue.list)):
+                curr_state = queue.pop()
+                seen.add(curr_state[0])
+                if problem.isGoalState(curr_state[0]):
+                    return curr_state[3]
             
-    #         for child in children:
-    #             queue.push(child)
+                children = problem.getSuccessors(curr_state[0])
+                seq = curr_state[3]
+                for child in children:
+                    if child[0] not in seen:
+                        next_seq = seq + [child[1]]
+                        queue.push(child + (next_seq,))
 
-    #         return False
+        return []
 
-    # start_state = problem.getStartState()
-    # actions = []
-    # queue = util.Queue()
-    # if problem.isGoalState(start_state):
-    #     return actions
-    # for child in problem.getSuccessors(start_state):
-    #     queue.push(child + tuple())
+    start_state = problem.getStartState()
+    actions = []
+    seen = set()
+    seen.add(start_state)
+    queue = util.Queue()
+    if problem.isGoalState(start_state):
+        return actions
+    for child in problem.getSuccessors(start_state):
+        queue.push(child + ([child[1]],))
     
-    # bfs()
+    return bfs()
     
-    # return actions
-
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
