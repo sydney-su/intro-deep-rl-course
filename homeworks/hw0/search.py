@@ -90,12 +90,70 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+        
+    def dfs():
+        curr_state = stack.pop()
+        if curr_state[0] in seen:
+            return False
+        seen.add(curr_state[0])
+        if problem.isGoalState(curr_state[0]):
+            actions.insert(0, curr_state[1])
+            return True
+        
+        children = problem.getSuccessors(curr_state[0])
+        for child in children:
+            if child[0] not in seen:
+                stack.push(child)
+                if dfs():
+                    actions.insert(0, curr_state[1])
+                    return True
+
+        return False
+
+    start_state = problem.getStartState()
+    actions = []
+    seen = set()
+    seen.add(start_state)
+    stack = util.Stack()
+    if problem.isGoalState(start_state):
+        return actions
+    for child in problem.getSuccessors(start_state):
+        stack.push(child)
+        if dfs():
+            return actions
+    
+    return actions
+
 
 def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    # def bfs():
+    #     for _ in range(len(queue)):python pacman.py -l mediumMaze -p SearchAgent
+
+    #         curr_state = queue.pop()
+    #         if problem.isGoalState(curr_state[0]):
+    #             actions.insert(0, curr_state[1])
+    #             return True
+        
+    #         children = problem.getSuccessors(curr_state[0])
+            
+    #         for child in children:
+    #             queue.push(child)
+
+    #         return False
+
+    # start_state = problem.getStartState()
+    # actions = []
+    # queue = util.Queue()
+    # if problem.isGoalState(start_state):
+    #     return actions
+    # for child in problem.getSuccessors(start_state):
+    #     queue.push(child + tuple())
+    
+    # bfs()
+    
+    # return actions
 
 def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     """Search the node of least total cost first."""

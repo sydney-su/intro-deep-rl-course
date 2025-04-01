@@ -199,6 +199,7 @@ class GraphSearchTest(testClasses.TestCase):
     # print both the correct and student's solution and return false.
     def execute(self, grades, moduleDict, solutionDict):
         search = moduleDict['search']
+        print(moduleDict.keys())
         searchAgents = moduleDict['searchAgents']
         gold_solution = [str.split(solutionDict['solution']), str.split(solutionDict['rev_solution'])]
         gold_expanded_states = [str.split(solutionDict['expanded_states']), str.split(solutionDict['rev_expanded_states'])]
