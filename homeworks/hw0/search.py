@@ -138,7 +138,7 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
         seen.add(child[0])
         queue.push(child + ([child[1]],))
     
-    while queue:
+    while not queue.isEmpty():
         for _ in range(len(queue.list)):
             curr_state = queue.pop()
             if problem.isGoalState(curr_state[0]):
@@ -168,7 +168,7 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
         seen[child[0]] = child[2]
         queue.push(child + ([child[1]],), seen[child[0]])
     
-    while queue:
+    while not queue.isEmpty():
         curr_state = queue.pop()
         if problem.isGoalState(curr_state[0]):
             return curr_state[3]
@@ -197,7 +197,39 @@ def nullHeuristic(state, problem=None) -> float:
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directions]:
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    start_state = problem.getStartState()
+    # key = (x, y), value = g where g = cost from start
+    seen = {}
+    seen[start_state] = 0
+    queue = util.PriorityQueue()
+
+    if problem.isGoalState(start_state):
+        return []
+    
+    for child in problem.getSuccessors(start_state):
+        seen[child[0]] = child[2]
+        queue.push(child + ([child[1]],), child[2] + heuristic(child[0], problem))
+    
+    while not queue.isEmpty():
+        curr_state = queue.pop()
+        if problem.isGoalState(curr_state[0]):
+            return curr_state[3]
+
+        children = problem.getSuccessors(curr_state[0])
+        seq = curr_state[3]
+        cost = seen[curr_state[0]]
+        
+        # need to store costs associated with states
+        for child in children:
+            next_g = cost + child[2]
+            next_h = heuristic(child[0], problem)
+            next_f = next_g + next_h
+            if child[0] not in seen or seen[child[0]] > next_g:
+                seen[child[0]] = next_g
+                next_seq = seq + [child[1]]
+                queue.push(child + (next_seq,), next_f)
+
+    return []
 
 # Abbreviations
 bfs = breadthFirstSearch
