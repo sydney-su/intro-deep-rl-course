@@ -132,7 +132,6 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
         while queue:
             for _ in range(len(queue.list)):
                 curr_state = queue.pop()
-                seen.add(curr_state[0])
                 if problem.isGoalState(curr_state[0]):
                     return curr_state[3]
             
@@ -142,6 +141,7 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
                     if child[0] not in seen:
                         next_seq = seq + [child[1]]
                         queue.push(child + (next_seq,))
+                        seen.add(child[0])
 
         return []
 
@@ -153,6 +153,7 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     if problem.isGoalState(start_state):
         return actions
     for child in problem.getSuccessors(start_state):
+        seen.add(child[0])
         queue.push(child + ([child[1]],))
     
     return bfs()

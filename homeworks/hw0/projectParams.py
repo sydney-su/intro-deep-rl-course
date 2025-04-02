@@ -12,7 +12,7 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 
-STUDENT_CODE_DEFAULT = 'search.py,valueIterationAgents.py'
+STUDENT_CODE_DEFAULT = 'search.py,valueIterationAgents.py,searchAgents.py'
 PROJECT_TEST_CLASSES = 'HW0TestClasses.py'
 PROJECT_NAME = 'UCSD CSE 190 - HW0'
 BONUS_PIC = False
