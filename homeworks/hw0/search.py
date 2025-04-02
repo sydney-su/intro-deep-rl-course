@@ -92,32 +92,35 @@ def depthFirstSearch(problem: SearchProblem) -> List[Directions]:
     "*** YOUR CODE HERE ***"
         
     def dfs():
-        curr_state = stack.pop()
+        curr_state = stack.pop()    
         if curr_state[0] in seen:
             return False
-        seen.add(curr_state[0])
-        if problem.isGoalState(curr_state[0]):
+        
+        seen.add(curr_state[0])     # mark state as seen
+        if problem.isGoalState(curr_state[0]):      # if we have reached the goal state, insert the action and return True
             actions.insert(0, curr_state[1])
             return True
         
         children = problem.getSuccessors(curr_state[0])
-        for child in children:
+        for child in children:      # for each successor, push onto stack and run dfs
             if child[0] not in seen:
                 stack.push(child)
-                if dfs():
+                if dfs():           # if a successor reaches the goal state, insert the action and return True
                     actions.insert(0, curr_state[1])
                     return True
 
-        return False
+        return False    # no successors reach a goal state
 
     start_state = problem.getStartState()
-    actions = []
-    seen = set()
+    actions = []    # the sequence of actions to return
+    seen = set()    # to keep track of states we have already visited
     seen.add(start_state)
-    stack = util.Stack()
-    if problem.isGoalState(start_state):
+    stack = util.Stack()    # FILO used for dfs
+    
+    if problem.isGoalState(start_state):    # if we are already in the goal state, no actions needed
         return actions
-    for child in problem.getSuccessors(start_state):
+    
+    for child in problem.getSuccessors(start_state):    # for each successor, push onto the stack and run dfs
         stack.push(child)
         if dfs():
             return actions
@@ -129,24 +132,25 @@ def breadthFirstSearch(problem: SearchProblem) -> List[Directions]:
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     start_state = problem.getStartState()
-    seen = set()
+    seen = set()    # to keep track of states we have already visited
     seen.add(start_state)
-    queue = util.Queue()
-    if problem.isGoalState(start_state):
+    queue = util.Queue()    # FIFO used for bfs, layer by layer
+    
+    if problem.isGoalState(start_state):    # if we are already in the goal state, no actions needed
         return []
-    for child in problem.getSuccessors(start_state):
+    for child in problem.getSuccessors(start_state):    # for each successor, push onto the queue with the sequence of actions
         seen.add(child[0])
         queue.push(child + ([child[1]],))
     
     while not queue.isEmpty():
-        for _ in range(len(queue.list)):
+        for _ in range(len(queue.list)):    # visit all states in a layer at a time
             curr_state = queue.pop()
-            if problem.isGoalState(curr_state[0]):
+            if problem.isGoalState(curr_state[0]):      # if we have reached the goal state, return the sequence of actions taken
                 return curr_state[3]
         
             children = problem.getSuccessors(curr_state[0])
             seq = curr_state[3]
-            for child in children:
+            for child in children:      # for each successor, push onto the queue with the sequence of actions if not seen
                 if child[0] not in seen:
                     next_seq = seq + [child[1]]
                     queue.push(child + (next_seq,))
@@ -160,24 +164,27 @@ def uniformCostSearch(problem: SearchProblem) -> List[Directions]:
     # use priority queue and pop off least costly
     start_state = problem.getStartState()
     seen = {}
-    seen[start_state] = 0
-    queue = util.PriorityQueue()
-    if problem.isGoalState(start_state):
+    seen[start_state] = 0      # to keep track of states we have already visited as well as the current cost to visit that state
+    queue = util.PriorityQueue()    # priority queue (heap) used to pop lowest cost state
+
+    if problem.isGoalState(start_state):    # if we are already in the goal state, no actions needed
         return []
-    for child in problem.getSuccessors(start_state):
+    
+    for child in problem.getSuccessors(start_state):    # for each successor, push onto the pq with the sequence of actions and cost
         seen[child[0]] = child[2]
         queue.push(child + ([child[1]],), seen[child[0]])
     
     while not queue.isEmpty():
         curr_state = queue.pop()
-        if problem.isGoalState(curr_state[0]):
+        
+        if problem.isGoalState(curr_state[0]):       # if we have reached the goal state, return the sequence of actions taken
             return curr_state[3]
     
         children = problem.getSuccessors(curr_state[0])
         seq = curr_state[3]
         cost = seen[curr_state[0]]
         # need to store costs associated with states
-        for child in children:
+        for child in children:      # for each successor, push onto the queue with the sequence of actions if not seen or encounter lower cost
             next_cost = cost + child[2]
             if child[0] not in seen or next_cost < seen[child[0]]:
                 seen[child[0]] = next_cost
@@ -198,29 +205,28 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic) -> List[Directi
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
     start_state = problem.getStartState()
-    # key = (x, y), value = g where g = cost from start
-    seen = {}
-    seen[start_state] = 0
-    queue = util.PriorityQueue()
+    seen = {}       # key = (x, y), value = g where g = cost from start
+    seen[start_state] = 0   # to keep track of states we have already visited as well as the current g cost to visit that state
+    queue = util.PriorityQueue()    # priority queue (heap) used to pop lowest cost state (f cost)
 
-    if problem.isGoalState(start_state):
+    if problem.isGoalState(start_state):    # if we are already in the goal state, no actions needed
         return []
     
-    for child in problem.getSuccessors(start_state):
+    for child in problem.getSuccessors(start_state):    # for each successor, push onto the pq with the sequence of actions and f cost
         seen[child[0]] = child[2]
         queue.push(child + ([child[1]],), child[2] + heuristic(child[0], problem))
     
     while not queue.isEmpty():
         curr_state = queue.pop()
-        if problem.isGoalState(curr_state[0]):
+
+        if problem.isGoalState(curr_state[0]):  # if we have reached the goal state, return the sequence of actions taken
             return curr_state[3]
 
         children = problem.getSuccessors(curr_state[0])
         seq = curr_state[3]
         cost = seen[curr_state[0]]
         
-        # need to store costs associated with states
-        for child in children:
+        for child in children:   # for each successor, push onto the queue with the sequence of actions if not seen or encounter lower cost
             next_g = cost + child[2]
             next_h = heuristic(child[0], problem)
             next_f = next_g + next_h

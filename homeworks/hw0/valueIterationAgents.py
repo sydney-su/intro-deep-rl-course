@@ -189,24 +189,25 @@ class ValueIterationAgent(Agent):
           Run the value iteration algorithm. Note that in standard
           value iteration, V_k+1(...) depends on V_k(...)'s.
         """
-        for _ in range(self.iterations):
-            new_values = self.values.copy()
+        for _ in range(self.iterations):    # run for given number of iterations
+            new_values = self.values.copy()     # make a copy of old values
 
             for state in self.mdp.getStates():
-                if self.mdp.isTerminal(state):
+                if self.mdp.isTerminal(state):      # if terminal, set value to -1
                     new_values[state] = -1
                 else:
                     possible_actions = self.mdp.getPossibleActions(state)
-                    if len(possible_actions) == 0:
+                    if len(possible_actions) == 0:  # if no possible future rewards (actions), set value to -1
                         new_values[state] = -1
                         
                     max_q = float('-inf')
-                    for action in possible_actions:
+                    for action in possible_actions:     # find the maximum q_value from all possible actions
                         q_val = self.computeQValueFromValues(state, action)
                         max_q = max(max_q, q_val)
+                    
                     new_values[state] = max_q
 
-            self.values = new_values
+            self.values = new_values    # update values
 
 
     def getValue(self, state):
@@ -222,9 +223,9 @@ class ValueIterationAgent(Agent):
         """
         "*** YOUR CODE HERE ***"
         q_val = 0
-        for next_state, probability in self.mdp.getTransitionStatesAndProbs(state, action):
-            reward = self.mdp.getReward(state, action, next_state)
-            q_val += probability * (reward + self.discount * self.values[next_state])
+        for next_state, probability in self.mdp.getTransitionStatesAndProbs(state, action): # get transition states and probabilities for given state and action
+            reward = self.mdp.getReward(state, action, next_state)  # get the reward if you take the action to the next state
+            q_val += probability * (reward + self.discount * self.values[next_state])   # compute q_val formula
         
         return q_val
 
@@ -239,13 +240,13 @@ class ValueIterationAgent(Agent):
         """
         "*** YOUR CODE HERE ***"
 
-        if self.mdp.isTerminal(state):
+        if self.mdp.isTerminal(state):  # return None if terminal state
             return None
         
         best_action = None
         res = float("-inf")
 
-        for action in self.mdp.getPossibleActions(state):
+        for action in self.mdp.getPossibleActions(state):   # find the best action from the best q_val of possible actions
             q_value = self.computeQValueFromValues(state, action)
             if q_value > res:
                 res = q_value
