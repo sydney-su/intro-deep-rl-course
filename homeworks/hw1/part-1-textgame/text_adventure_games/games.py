@@ -70,6 +70,7 @@ class Game:
         if custom_actions:
             for ca in custom_actions:
                 if inspect.isclass(ca) and issubclass(ca, actions.Action):
+                    self.parser.ok(ca.action_name())
                     self.parser.add_action(ca)
                 else:
                     err_msg = f"ERROR: invalid custom action ({ca})"
