@@ -1,1 +1,1 @@
-take smoke bomb, take smoke bomb, take grappling hook, take grappling hook, exit, use smoke bomb, use grappling hook, traverse gate, enter, use smoke bomb, steal keycard, use keycard, enter control room
+take smoke bomb, take smoke bomb, take grappling hook, take grappling hook, exit, use smoke bomb, use grappling hook, traverse gate, enter, use smoke bomb, steal keycard, use keycard, enter control room, use computer, exit, enter vault
